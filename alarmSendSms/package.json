@@ -1,0 +1,9 @@
+{
+  "name": "alarmSendSms",
+  "version": "0.0.1",
+   "dependencies": {
+    "googleapis": ">=32.0.0",
+    "firebase-admin": "^5.12.1",
+    "twilio": "^3.36.0"
+  }
+}
