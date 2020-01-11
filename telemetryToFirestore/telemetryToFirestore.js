@@ -12,7 +12,7 @@ db.settings( { timestampsInSnapshots: true });
  * @param {Object} event The Cloud Functions event.
  * @param {Function} callback The callback function.
  */
-exports.testingTimeStamps = (event, callback) => {
+exports.telemetryToFirestore = (event, callback) => {
   
   // Step one get the pub sub state info.
   const pubsubMessage = event.data;
