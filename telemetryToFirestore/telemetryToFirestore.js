@@ -12,7 +12,7 @@ db.settings( { timestampsInSnapshots: true });
  * @param {Object} event The Cloud Functions event.
  * @param {Function} callback The callback function.
  */
-exports.telemetryToFirestore = (event, callback) => {
+exports.testingTimeStamps = (event, callback) => {
   
   // Step one get the pub sub state info.
   const pubsubMessage = event.data;
@@ -28,8 +28,12 @@ exports.telemetryToFirestore = (event, callback) => {
   //console.log(jsonText);
   var telemetryData = JSON.parse(jsonText);
   const MEMSdeviceId = telemetryData.deviceid;
+  var d = new Date(telemetryData.time *1000 );
+  console.log("Time IS " +  d );
+  //var myFirebaseFirestoreTimestampFromDate = firebase.firestore.Timestamp.fromDate(new Date());
  // telemetryData.time = admin.firestore.FieldValue.serverTimestamp();
-   telemetryData.time = admin.firestore.Timestamp.now();
+  telemetryData.time = admin.firestore.Timestamp.fromDate(d);
+  // telemetryData.time = admin.firestore.Timestamp.now();
   var systemcounter = 0;
   
   // Used to ensure finsihed before exit
