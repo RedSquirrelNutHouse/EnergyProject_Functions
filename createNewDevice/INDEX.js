@@ -33,6 +33,11 @@ const fs = require('fs');
 const {google} = require('googleapis');
 const iot = require('@google-cloud/iot');
 var backslash = require('backslash');
+// Used to create the new device.
+const admin = require('firebase-admin');
+admin.initializeApp();
+var db = admin.firestore();
+db.settings( { timestampsInSnapshots: true });
 
 // 
 /**
@@ -131,7 +136,39 @@ exports.createNewDevice = (req, res) => {
     return iotClient.createDevice(request).then(responses => {
         const response = responses[0];
         console.log('Created device', response);
-        res.status(200).send(response);
+        // Now we need to create the device in Firebase
+        // We hold the value of the Settings Object here
+        let MEMSDeviceSettings = null;
+        updateDevice = null;
+        // Create Default data Set
+        let data = {
+          deviceName: '',
+          CustomerName: '',
+          siteName: '',
+          deviceLocation: '',
+          deviceId: deviceId,
+          deviceComment: '',
+          deviceURL: '',
+          averageForDayData: [],
+          deviceStatus: { 
+            deviceLastOnline: admin.firestore.FieldValue.serverTimestamp(),
+            deviceStatus: true,
+            firmwareVersion : '',
+            settingsVersion: '',
+            gitUpdateFile: '',
+            deviceType: 'None',
+          } 
+        };
+        // Add the new doc for the device.
+        deviceDocUpdate = db.collection('devices').doc(deviceId).set(data).then(ref => {
+          console.log('Added document with ID: ', deviceId);
+          res.status(200).send(response);
+        }).catch(err => {
+            res.status(400).send(err);
+       		  console.log('Error getting settings document', err);
+   			});
+
+        
       } ).catch(error => {
         responceMessage.data = error;
         responceMessage.error.status = true;
