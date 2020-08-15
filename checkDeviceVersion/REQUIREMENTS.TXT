@@ -1,0 +1,5 @@
+# Function dependencies, for example:
+# package>=version
+
+PyGithub >= 1.51
+firebase_admin >= 4.3.0
